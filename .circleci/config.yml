@@ -38,7 +38,7 @@ jobs:
     steps:
       - checkout
       - android/start_emulator_and_run_tests:
-          test_command: ./gradlew connectedDebugAndroidTest
+          test_command: ./gradlew :app:connectedDebugAndroidTest
           system_image: << parameters.system-image >>
       - run:
           name: Save test results
@@ -120,12 +120,11 @@ workflows:
             parameters:
               system-image:
                 - system-images;android-35;google_apis;x86_64
+                - system-images;android-34;google_apis;x86_64
+                - system-images;android-33;google_apis;x86_64
+                - system-images;android-32;google_apis;x86_64
                 - system-images;android-30;google_apis;x86
                 - system-images;android-29;google_apis;x86
-                - system-images;android-28;google_apis;x86
-                - system-images;android-27;google_apis;x86
-                - system-images;android-26;google_apis;x86
-                - system-images;android-25;google_apis;x86
           name: android-test-<<matrix.system-image>>
           filters:
             branches:
