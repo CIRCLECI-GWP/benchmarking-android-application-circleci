@@ -128,13 +128,10 @@ workflows:
           filters:
             branches:
               only: main # Commits to main branch
-      #      - benchmarks-emulator
-      #      - benchmarks-ftl
       - release-build:
           requires:
             - unit-test
             - android-test-all
-          #            - benchmarks-ftl
           filters:
             branches:
               only: main # Commits to main branch
