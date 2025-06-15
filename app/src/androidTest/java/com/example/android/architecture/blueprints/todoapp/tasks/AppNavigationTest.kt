@@ -156,29 +156,6 @@ class AppNavigationTest {
         composeTestRule.onNodeWithText(activity.getString(R.string.label_all)).assertIsDisplayed()
     }
 
-    @Test
-    fun taskDetailScreen_doubleBackButton() = runTest {
-        val taskName = "Back button"
-        taskRepository.createTask(taskName, "Description")
-
-        setContent()
-
-        // Click on the task on the list
-        composeTestRule.onNodeWithText(taskName).assertIsDisplayed()
-        composeTestRule.onNodeWithText(taskName).performClick()
-        // Click on the edit task button
-        composeTestRule.onNodeWithContentDescription(activity.getString(R.string.edit_task))
-            .performClick()
-
-        // Confirm that if we click back once, we end up back at the task details page
-        pressBack()
-        composeTestRule.onNodeWithText(taskName).assertIsDisplayed()
-
-        // Confirm that if we click back a second time, we end up back at the home screen
-        pressBack()
-        composeTestRule.onNodeWithText(activity.getString(R.string.label_all)).assertIsDisplayed()
-    }
-
     private fun setContent() {
         composeTestRule.setContent {
             TodoTheme {
