@@ -33,8 +33,8 @@ jobs:
         default: system-images;android-35;google_apis;x86_64
     executor:
       name: android/android_machine
-      resource_class: xlarge
-      tag: 2025.03.1
+      resource_class: large
+      tag: 2024.11.1
     steps:
       - checkout
       - android/start_emulator_and_run_tests:
