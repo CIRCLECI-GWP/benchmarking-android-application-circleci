@@ -63,6 +63,8 @@ jobs:
           command: ./gradlew app:assembleBenchmark macrobenchmark:assembleBenchmark
       - gcp-cli/setup:
           version: 404.0.0
+          google_service_key: GCLOUD_SERVICE_KEY
+          project_id: GOOGLE_PROJECT_ID
       - run:
           name: run on FTL
           command: |
