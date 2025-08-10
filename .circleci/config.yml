@@ -60,7 +60,7 @@ jobs:
       - android/restore_gradle_cache
       - run:
           name: Build app and test app
-          command: ./gradlew app:assembleRelease macrobenchmark:assemble
+          command: ./gradlew app:assembleBenchmark macrobenchmark:assembleBenchmark
       - gcp-cli/initialize:
           gcloud-service-key: GCP_SA_KEY
           google-project-id: GCP_PROJECT_ID
@@ -69,8 +69,8 @@ jobs:
           command: |
             gcloud firebase test android run \
               --type instrumentation \
-              --app app/build/outputs/apk/release/app-release.apk \
-              --test macrobenchmark/build/outputs/apk/release/macrobenchmark-release.apk \
+              --app app/build/outputs/apk/benchmark/app-benchmark.apk \
+              --test macrobenchmark/build/outputs/apk/benchmark/macrobenchmark-benchmark.apk \
               --device model=redfin:,version=30,locale=en,orientation=portrait \
               --directories-to-pull /sdcard/Download \
               --results-bucket gs://android-sample-benchmarks \
@@ -128,10 +128,17 @@ workflows:
           filters:
             branches:
               only: main # Commits to main branch
+      - benchmarks-ftl:
+          requires:
+            - unit-test
+          filters:
+            branches:
+              only: main # Run benchmarks only on main branch
       - release-build:
           requires:
             - unit-test
             - android-test-all
+            - benchmarks-ftl
           filters:
             branches:
               only: main # Commits to main branch
