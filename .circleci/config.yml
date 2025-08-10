@@ -65,12 +65,32 @@ jobs:
           version: 404.0.0
           gcloud_service_key: GCP_SA_KEY
           google_project_id: GCP_PROJECT_ID
+      # Alternative setup method if the orb fails:
+      - run:
+          name: Setup GCP CLI manually
+          command: |
+            echo $GCP_SA_KEY | base64 -d > ${HOME}/gcp-key.json
+            gcloud auth activate-service-account --key-file=${HOME}/gcp-key.json
+            gcloud config set project $GCP_PROJECT_ID
+      - run:
+          name: Verify GCP authentication
+          command: |
+            gcloud auth list
+            gcloud config list
+            gcloud projects list
+            gcloud firebase test android models list
+      - run:
+          name: Enable required APIs
+          command: |
+            gcloud services enable testing.googleapis.com
+            gcloud services enable toolresults.googleapis.com
+            gcloud services enable firebase.googleapis.com
       - run:
           name: run on FTL
           command: |
             gcloud firebase test android run \
               --type instrumentation \
-              --app app/build/outputs/apk/benchmark/app-benchmark-unsigned.apk \
+              --app app/build/outputs/apk/benchmark/app-benchmark.apk \
               --test macrobenchmark/build/outputs/apk/benchmark/macrobenchmark-benchmark.apk \
               --device model=tokay,version=35,locale=en,orientation=portrait \
               --directories-to-pull /sdcard/Download \

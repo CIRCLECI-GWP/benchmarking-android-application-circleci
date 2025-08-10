@@ -42,6 +42,12 @@ android {
         }
     }
 
+    signingConfigs {
+        getByName("debug") {
+            // Uses the default debug keystore
+        }
+    }
+
     buildTypes {
         getByName("debug") {
             isMinifyEnabled = false
@@ -61,6 +67,7 @@ android {
             initWith(buildTypes.getByName("release"))
             matchingFallbacks += listOf("release")
             isDebuggable = false
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
