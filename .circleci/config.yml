@@ -63,21 +63,6 @@ jobs:
           command: ./gradlew app:assembleBenchmark macrobenchmark:assembleBenchmark
       - gcp-cli/setup:
           version: 404.0.0
-          gcloud_service_key: GCP_SA_KEY
-          google_project_id: GCP_PROJECT_ID
-      - run:
-          name: Verify GCP authentication
-          command: |
-            gcloud auth list
-            gcloud config list
-            gcloud projects list
-            gcloud firebase test android models list
-      - run:
-          name: Enable required APIs
-          command: |
-            gcloud services enable testing.googleapis.com
-            gcloud services enable toolresults.googleapis.com
-            gcloud services enable firebase.googleapis.com
       - run:
           name: run on FTL
           command: |
