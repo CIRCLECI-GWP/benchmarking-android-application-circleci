@@ -53,7 +53,7 @@ jobs:
 
   benchmarks-ftl:
     executor:
-      name: android/android-docker
+      name: android/android_docker
       tag: 2025.03.1-node
     steps:
       - checkout
