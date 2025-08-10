@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   android: circleci/android@3.1.0
-  gcp-cli: circleci/gcp-cli@3.3.1
+  gcp-cli: circleci/gcp-cli@3.3.2
 
 jobs:
   unit-test:
@@ -61,9 +61,10 @@ jobs:
       - run:
           name: Build app and test app
           command: ./gradlew app:assembleBenchmark macrobenchmark:assembleBenchmark
-      - gcp-cli/initialize:
-          gcloud-service-key: GCP_SA_KEY
-          google-project-id: GCP_PROJECT_ID
+      - gcp-cli/setup:
+          version: 404.0.0
+          gcloud_service_key: GCP_SA_KEY
+          google_project_id: GCP_PROJECT_ID
       - run:
           name: run on FTL
           command: |
