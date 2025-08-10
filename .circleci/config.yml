@@ -70,7 +70,7 @@ jobs:
           command: |
             gcloud firebase test android run \
               --type instrumentation \
-              --app app/build/outputs/apk/benchmark/app-benchmark.apk \
+              --app app/build/outputs/apk/benchmark/app-benchmark-unsigned.apk \
               --test macrobenchmark/build/outputs/apk/benchmark/macrobenchmark-benchmark.apk \
               --device model=tokay,version=35,locale=en,orientation=portrait \
               --directories-to-pull /sdcard/Download \
