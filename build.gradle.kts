@@ -20,4 +20,52 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.android.test) apply false
+}
+
+// Convenience tasks for running macrobenchmarks
+tasks.register("benchmarkStartup") {
+    description = "Run startup benchmarks"
+    group = "benchmark"
+    dependsOn(":macrobenchmark:connectedBenchmarkAndroidTest")
+    doFirst {
+        project.gradle.startParameter.projectProperties["android.testInstrumentationRunnerArguments.class"] = 
+            "com.example.android.architecture.blueprints.todoapp.benchmark.StartupBenchmark"
+    }
+}
+
+tasks.register("benchmarkScroll") {
+    description = "Run scroll performance benchmarks"
+    group = "benchmark"
+    dependsOn(":macrobenchmark:connectedBenchmarkAndroidTest")
+    doFirst {
+        project.gradle.startParameter.projectProperties["android.testInstrumentationRunnerArguments.class"] = 
+            "com.example.android.architecture.blueprints.todoapp.benchmark.ScrollBenchmark"
+    }
+}
+
+tasks.register("benchmarkNavigation") {
+    description = "Run navigation performance benchmarks"
+    group = "benchmark"
+    dependsOn(":macrobenchmark:connectedBenchmarkAndroidTest")
+    doFirst {
+        project.gradle.startParameter.projectProperties["android.testInstrumentationRunnerArguments.class"] = 
+            "com.example.android.architecture.blueprints.todoapp.benchmark.NavigationBenchmark"
+    }
+}
+
+tasks.register("generateBaselineProfile") {
+    description = "Generate baseline profile"
+    group = "benchmark"
+    dependsOn(":macrobenchmark:connectedBenchmarkAndroidTest")
+    doFirst {
+        project.gradle.startParameter.projectProperties["android.testInstrumentationRunnerArguments.class"] = 
+            "com.example.android.architecture.blueprints.todoapp.benchmark.BaselineProfileGenerator"
+    }
+}
+
+tasks.register("benchmarkAll") {
+    description = "Run all benchmarks"
+    group = "benchmark"
+    dependsOn(":macrobenchmark:connectedBenchmarkAndroidTest")
 }

@@ -56,6 +56,12 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             testProguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguardTest-rules.pro")
         }
+        
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
+        }
     }
 
     // Always show the result of every unit test, even if it passes.
@@ -115,6 +121,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.timber)
     implementation(libs.androidx.test.espresso.idling.resources)
+    
+    // ProfileInstaller for Baseline Profiles
+    implementation(libs.androidx.profileinstaller)
 
     // Architecture Components
     implementation(libs.room.runtime)

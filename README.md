@@ -11,6 +11,7 @@ In this branch you'll find:
 *   Two **product flavors**, `mock` and `prod`, [to ease development and testing](https://android-developers.googleblog.com/2015/12/leveraging-product-flavors-in-android.html).
 *   A collection of unit, integration and e2e **tests**, including "shared" tests that can be run on emulator/device.
 *   Dependency injection using [Hilt](https://developer.android.com/training/dependency-injection/hilt-android).
+*   **Macrobenchmarks** using [Jetpack Benchmark](https://developer.android.com/topic/performance/benchmarking/macrobenchmark-overview) for performance testing.
 
 ## Screenshots
 
@@ -41,6 +42,54 @@ git clone git@github.com:android/architecture-samples.git
 ```
 
 Finally open the `architecture-samples/` directory in Android Studio.
+
+## Macrobenchmarking
+
+This project includes comprehensive macrobenchmarks using [Jetpack Benchmark](https://developer.android.com/topic/performance/benchmarking/macrobenchmark-overview) to measure app performance metrics like startup time, scrolling smoothness, and navigation performance.
+
+### Available Benchmarks
+
+The `macrobenchmark` module contains the following benchmarks:
+
+- **StartupBenchmark**: Measures cold and warm app startup times
+- **ScrollBenchmark**: Tests scrolling performance through task lists
+- **NavigationBenchmark**: Measures performance during screen transitions
+- **BaselineProfileGenerator**: Generates baseline profiles for improved performance
+
+### Running Benchmarks
+
+#### Prerequisites
+- Use a physical device (benchmarks require real hardware)
+- Build and install the app in `benchmark` build variant
+- Disable battery optimizations for consistent results
+
+#### From Command Line
+```bash
+# Run all benchmarks
+./gradlew benchmarkAll
+
+# Run specific benchmarks
+./gradlew benchmarkStartup
+./gradlew benchmarkScroll  
+./gradlew benchmarkNavigation
+
+# Generate baseline profile
+./gradlew generateBaselineProfile
+```
+
+#### From Android Studio
+1. Select the `macrobenchmark` module
+2. Choose `benchmark` build variant
+3. Run individual test classes
+
+### Understanding Results
+
+Benchmark results include metrics like:
+- **Startup timing**: Time to first pixel and full display
+- **Frame timing**: Frame duration and jank percentage
+- **Memory usage**: Allocation patterns during operations
+
+See the [macrobenchmark/README.md](macrobenchmark/README.md) for detailed documentation.
 
 ### License
 
