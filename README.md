@@ -1,114 +1,89 @@
-# Android Architecture Samples
+# Macrobenchmark Sample
 
-These samples showcase different architectural approaches to developing Android apps. In its different branches you'll find the same app (a TODO app) implemented with small differences.
+This sample project shows how to use the Jetpack Macrobenchmark library.
 
-In this branch you'll find:
-*   User Interface built with **[Jetpack Compose](https://developer.android.com/jetpack/compose)** 
-*   A single-activity architecture, using **[Navigation Compose](https://developer.android.com/jetpack/compose/navigation)**.
-*   A presentation layer that contains a Compose screen (View) and a **ViewModel** per screen (or feature).
-*   Reactive UIs using **[Flow](https://developer.android.com/kotlin/flow)** and **[coroutines](https://kotlinlang.org/docs/coroutines-overview.html)** for asynchronous operations.
-*   A **data layer** with a repository and two data sources (local using Room and a fake remote).
-*   Two **product flavors**, `mock` and `prod`, [to ease development and testing](https://android-developers.googleblog.com/2015/12/leveraging-product-flavors-in-android.html).
-*   A collection of unit, integration and e2e **tests**, including "shared" tests that can be run on emulator/device.
-*   Dependency injection using [Hilt](https://developer.android.com/training/dependency-injection/hilt-android).
-*   **Macrobenchmarks** using [Jetpack Benchmark](https://developer.android.com/topic/performance/benchmarking/macrobenchmark-overview) for performance testing.
+See the [Macrobenchmark guide](https://developer.android.com/studio/profile/macrobenchmark-intro) for more information on the library.
 
-## Screenshots
+### Code Samples
 
-<img src="screenshots/screenshots.png" alt="Screenshot">
+The sample project includes a variety of benchmarks to help getting started with the API.
 
-## Why a to-do app?
+Learn about Baseline Profile generation with classes in the
+[baselineprofile](macrobenchmark/src/main/java/com/example/macrobenchmark/baselineprofile) folder.
 
-The app in this project aims to be simple enough that you can understand it quickly, but complex enough to showcase difficult design decisions and testing scenarios. For more information, see the [app's specification](https://github.com/googlesamples/android-architecture/wiki/To-do-app-specification).
+You can also explore [startup](macrobenchmark/src/main/java/com/example/macrobenchmark/startup) and
+[frame timing](macrobenchmark/src/main/java/com/example/macrobenchmark/frames) metrics.
 
-## What is it not?
-*   A template. Check out the [Architecture Templates](https://github.com/android/architecture-templates) instead.
-*   A UI/Material Design sample. The interface of the app is deliberately kept simple to focus on architecture. Check out the [Compose Samples](https://github.com/android/compose-samples) instead.
-*   A real production app with network access, user authentication, etc. Check out the [Now in Android app](https://github.com/android/nowinandroid) instead.
+Further, the [baseBenchmarks](baseBenchmarks) library offers a drop in benchmarks, which can be
+used in production apps to get started with macrobenchmarking.
+You can copy & paste the library, then adjust the [package name](baseBenchmarks/src/main/java/com/example/benchmark/macro/base/util/Utils.kt)
+to match the app under test and see results quickly.
 
-## Who is it for?
+### Baseline Profiles
 
-*   Intermediate developers and beginners looking for a way to structure their app in a testable and maintainable way.
-*   Advanced developers looking for quick reference.
+Since AGP 8.0.0 Baseline Profiles can be stored in `src/main/baselineProfiles` folder.
+This sample uses `src/main/baselineProfiles` to store Baseline Profiles.
+With this, more than one profile file can be created, stored and updated.
+This makes Baseline Profiles easier to maintain and allows shipping more granular profiles, without
+the need to re-generate a full Baseline Profile for minor changes.
 
-## Opening a sample in Android Studio
+Also, baseline profile generators are now in separate classes. One for each user journey and a separate one for app startup.
 
-To open one of the samples in Android Studio, begin by checking out one of the sample branches, and then open the root directory in Android Studio. The following series of steps illustrate how to open the sample.
+### Running
 
-Clone the repository:
+Open the `MacrobenchmarkSample` project in Android Studio Bumblebee or later, and run benchmarks as you usually would run tests: Ctrl-Shift-F10 (Mac: Ctrl-Shift-R)
 
+Alternatively, run the benchmarks from terminal with: 
 ```
-git clone git@github.com:android/architecture-samples.git
+./gradlew macrobenchmark:cC
 ```
 
-Finally open the `architecture-samples/` directory in Android Studio.
+### Macrobenchmark with Composition Tr  acing
+Composition Tracing allows to run system tracing with information on when all Composables (re)compose.
+This gives you insights on where the UI spends majority of the time and helps you find jank.
 
-## Macrobenchmarking
+To set up composition tracing for your app, follow our [documentation](https://developer.android.com/jetpack/compose/tooling/tracing).
+To get composition tracing when running a macrobenchmark, you also need to use `androidx.benchmark.perfettoSdkTracing.enable=true` instrumentation argument.
 
-This project includes comprehensive macrobenchmarks using [Jetpack Benchmark](https://developer.android.com/topic/performance/benchmarking/macrobenchmark-overview) to measure app performance metrics like startup time, scrolling smoothness, and navigation performance.
+You can check the `Scroll List With Composition Tracing` run configuration that is part of the project, 
+which runs the scroll compose list benchmark while also recording the information on composition.
 
-### Available Benchmarks
+It produces results like in the following table:
+```
+FrameTimingBenchmark_scrollComposeList
+%EntryRow (%Count                                    min   5.0,   median   6.0,   max   6.0
+%EntryRow (%Ms                                       min  10.2,   median  11.8,   max  16.2
+EntryRowCustomTraceCount                             min   5.0,   median   6.0,   max   6.0
+EntryRowCustomTraceMs                                min  10.0,   median  11.7,   max  16.1
 
-The `macrobenchmark` module contains the following benchmarks:
-
-- **StartupBenchmark**: Measures cold and warm app startup times
-- **ScrollBenchmark**: Tests scrolling performance through task lists
-- **NavigationBenchmark**: Measures performance during screen transitions
-- **BaselineProfileGenerator**: Generates baseline profiles for improved performance
-
-### Running Benchmarks
-
-#### Prerequisites
-- Use a physical device (benchmarks require real hardware)
-- Build and install the app in `benchmark` build variant
-- Disable battery optimizations for consistent results
-
-#### From Command Line
-```bash
-# Run all benchmarks
-./gradlew benchmarkAll
-
-# Run specific benchmarks
-./gradlew benchmarkStartup
-./gradlew benchmarkScroll  
-./gradlew benchmarkNavigation
-
-# Generate baseline profile
-./gradlew generateBaselineProfile
+frameDurationCpuMs                                   P50    4.8,   P90    6.8,   P95    8.9,   P99   15.3
+frameOverrunMs                                       P50   -9.2,   P90   -1.9,   P95  266.9,   P99  310.9
+Traces: Iteration 0 1 2 3 4 5 6 7 8 9
 ```
 
-#### From Android Studio
-1. Select the `macrobenchmark` module
-2. Choose `benchmark` build variant
-3. Run individual test classes
+And from there you can also delve into the system trace, which shows information on composition: 
+![System trace with composition tracing](media/composition-tracing.png)
 
-### Understanding Results
+### Reporting Issues
 
-Benchmark results include metrics like:
-- **Startup timing**: Time to first pixel and full display
-- **Frame timing**: Frame duration and jank percentage
-- **Memory usage**: Allocation patterns during operations
+You can report an [Issue with the sample](https://github.com/googlesamples/android-performance/issues) using this repository. If you find an issue with the Macrobenchmark library, report it using the [Issue Tracker](https://issuetracker.google.com/issues/new?component=975669&template=1519452).
 
-See the [macrobenchmark/README.md](macrobenchmark/README.md) for detailed documentation.
+License
+-------
 
-### License
-
-
-```
-Copyright 2024 Google, Inc.
+Copyright 2022 The Android Open Source Project, Inc.
 
 Licensed to the Apache Software Foundation (ASF) under one or more contributor
-license agreements. See the NOTICE file distributed with this work for
-additional information regarding copyright ownership. The ASF licenses this
+license agreements.  See the NOTICE file distributed with this work for
+additional information regarding copyright ownership.  The ASF licenses this
 file to you under the Apache License, Version 2.0 (the "License"); you may not
-use this file except in compliance with the License. You may obtain a copy of
+use this file except in compliance with the License.  You may obtain a copy of
 the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
 License for the specific language governing permissions and limitations under
 the License.
-```

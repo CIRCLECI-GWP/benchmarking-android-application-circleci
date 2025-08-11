@@ -70,9 +70,10 @@ jobs:
           command: |
             gcloud firebase test android run \
               --type instrumentation \
-              --app app/build/outputs/apk/benchmark/app-benchmark.apk \
-              --test macrobenchmark/build/outputs/apk/benchmark/macrobenchmark-benchmark.apk \
-              --device model=tokay,version=35,locale=en,orientation=portrait \
+              --app app/build/outputs/apk/benchmarkRelease/app-benchmarkRelease.apk \
+              --test macrobenchmark/build/outputs/apk/benchmarkRelease/macrobenchmark-benchmarkRelease.apk \
+              --device model=tokay,version=34,locale=en,orientation=portrait \
+              --timeout 45m \
               --directories-to-pull /sdcard/Download \
               --results-bucket gs://android-sample-benchmarks \
               --results-dir macrobenchmark \
