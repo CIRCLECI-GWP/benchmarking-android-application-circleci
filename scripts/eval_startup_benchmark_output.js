@@ -26,17 +26,22 @@ benchmarkData.benchmarks.forEach((benchmark, index) => {
         return;
     }
 
-    const mode = benchmark.params.mode || 'SINGLE';
     const benchmarkName = benchmark.name || `benchmark_${index + 1}`;
+    const className = benchmark.className || 'unknown';
     const medianTime = metrics.median;
     
-    let msg = `${mode} startup metrics (${benchmarkName}) - ${medianTime}ms `;
+    let msg = `Startup benchmark (${benchmarkName}) - ${medianTime.toFixed(2)}ms`;
     
     if (medianTime > STARTUP_MEDIAN_THRESHOLD_MILIS) {
         err = 1;
         console.error(`${msg} ❌ - OVER THRESHOLD ${STARTUP_MEDIAN_THRESHOLD_MILIS}ms`);
+        console.error(`  Class: ${className}`);
+        console.error(`  Runs: [${metrics.runs.map(r => r.toFixed(2)).join(', ')}]`);
+        console.error(`  Min: ${metrics.minimum.toFixed(2)}ms, Max: ${metrics.maximum.toFixed(2)}ms`);
     } else {
         console.log(`${msg} ✅`);
+        console.log(`  Class: ${className}`);
+        console.log(`  Runs: [${metrics.runs.map(r => r.toFixed(2)).join(', ')}]`);
     }
 });
 
